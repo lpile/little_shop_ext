@@ -16,6 +16,7 @@ RSpec.describe User, type: :model do
     # as user
     it { should have_many :orders }
     it { should have_many(:order_items).through(:orders)}
+    it { should have_many :locations }
     # as merchant
     it { should have_many :items }
   end
