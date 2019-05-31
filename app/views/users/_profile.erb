@@ -19,8 +19,15 @@
 <section id="shipping-locations">
   <h2>Shipping Locations</h2>
   <p><% if @user.locations.any? %>
-
-
+    <% @user.locations.each do |location| %>
+    <h5><%= location.nickname %></h5>
+    <p>
+      <%= location.address %>,
+      <%= location.city %>,
+      <%= location.state %>
+      <%= location.zip %>
+    </p>
+    <% end %>
   <% else %>
   You have no shipping locations yet.
   <% end %></p>
