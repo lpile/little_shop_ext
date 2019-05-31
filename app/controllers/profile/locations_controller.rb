@@ -16,6 +16,18 @@ class Profile::LocationsController < ApplicationController
     end
   end
 
+  def edit
+    redirect_to profile_path
+  end
+
+  def update
+    redirect_to profile_path
+  end
+
+  def destroy
+    redirect_to profile_path
+  end
+
   private
 
   def location_params

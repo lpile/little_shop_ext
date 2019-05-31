@@ -27,6 +27,8 @@
       <%= location.state %>
       <%= location.zip %>
     </p>
+    <p><%= link_to "Delete", profile_location_path(location), method: :delete %></p>
+    <p><%= link_to "Edit", edit_profile_location_path(location) %></p>
     <% end %>
   <% else %>
   You have no shipping locations yet.
