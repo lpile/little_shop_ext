@@ -28,11 +28,11 @@ RSpec.describe 'user profile', type: :feature do
       visit profile_path
 
       within '#shipping-locations' do
-        expect(page).to have_link("Add Shipping Location", href: new_user_location_path(@user))
+        expect(page).to have_link("Add Shipping Location", href: new_profile_location_path)
 
         click_link "Add Shipping Location"
 
-        expect(current_path).to eq(new_user_location_path(@user))
+        expect(current_path).to eq(new_profile_location_path)
       end
     end
   end

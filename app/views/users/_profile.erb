@@ -18,7 +18,7 @@
 
 <section id="shipping-locations">
   <h2>Shipping Locations</h2>
-  <p><% if @user.locations.any? %>
+  <% if @user.locations.any? %>
     <% @user.locations.each do |location| %>
     <h5><%= location.nickname %></h5>
     <p>
@@ -30,8 +30,8 @@
     <% end %>
   <% else %>
   You have no shipping locations yet.
-  <% end %></p>
-  <%= link_to "Add Shipping Location", new_user_location_path(@user) %>
+  <% end %>
+  <p><%= link_to "Add Shipping Location", new_profile_location_path %></p>
 </section>
 
 <section id="orders-data">

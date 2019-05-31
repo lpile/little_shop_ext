@@ -7,8 +7,9 @@ RSpec.describe "add shipping location," do
   end
 
   it "user can add shipping location" do
-    visit new_user_location_path(@user)
+    visit new_profile_location_path
 
+    fill_in :location_nickname, with: "New Home"
     fill_in :location_address, with: "123 New Street"
     fill_in :location_city, with: "New City"
     fill_in :location_state, with: "New State"
@@ -16,12 +17,10 @@ RSpec.describe "add shipping location," do
 
     click_on "Create Shipping Location"
 
-    new_location = Location.last
-
     expect(current_path).to eq(profile_path)
 
     within '#shipping-locations' do
-      expect(page).to have_content("Home")
+      expect(page).to have_content("New Home")
       expect(page).to have_content("123 New Street")
       expect(page).to have_content("New City")
       expect(page).to have_content("New State")
