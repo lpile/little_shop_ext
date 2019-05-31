@@ -21,6 +21,20 @@ RSpec.describe 'user profile', type: :feature do
         expect(page).to have_link('Edit Profile Data')
       end
     end
+
+    it "there's a link to add a shipping location" do
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+
+      visit profile_path
+
+      within '#shipping-locations' do
+        expect(page).to have_link("Add Shipping Location", href: new_user_location_path(@user))
+
+        click_link "Add Shipping Location"
+
+        expect(current_path).to eq(new_user_location_path(@user))
+      end
+    end
   end
 
   describe 'registered user edits their profile' do
