@@ -1,0 +1,19 @@
+<%= tag.div id: "order-#{@order.id}" do %>
+  <p>Order ID <%= @order.id %></p>
+  <p>Created: <%= @order.created_at %></p>
+  <p>Last Update: <%= @order.updated_at %></p>
+  <p>Status: <%= @order.status %></p>
+  <p>Item Count: <%= @order.total_item_count %></p>
+  <p>Total Cost: <%= number_to_currency(@order.total_cost) %></p>
+
+  <% if @order.status == 'pending' || @order.status == 'packaged' %>
+  <p><%= button_to 'Cancel Order', profile_order_path(@order), method: :delete %></p>
+  <% end %>
+
+  <% @order.order_items.each do |oitem| %>
+    <%= tag.div id: "oitem-#{oitem.id}" do %>
+      <%= render partial: "/profile/orders/order_item_card", locals: {oitem: oitem, img_width: 150} %>
+    <% end %>
+  <% end %>
+
+<% end %>

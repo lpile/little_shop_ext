@@ -1,0 +1,28 @@
+<h1>Cart</h1>
+<% if cart.contents.empty? %>
+  <p>Your Cart is empty.</p>
+<% else %>
+  <h3>Total: <%= number_to_currency(cart.total) %></h3>
+  <% if current_user %>
+    <%= button_to "Check Out", profile_orders_path, method: :post %>
+  <% else %>
+    <p>You must <%= link_to "register", registration_path %>
+      or <%= link_to "log in", login_path %> to check out.</p>
+  <% end %>
+  <%= button_to "Empty Cart", empty_cart_path, method: :delete %>
+  <ul id="items">
+    <% cart.items.each do |item, quantity| %>
+      <li id="item-<%= item.id %>">
+        <%= item.name %>
+        <%= image_tag item.image %>
+        Sold By: <%= item.user.name %>
+        <%=  number_to_currency(item.price) %>
+        quantity: <%= quantity %>
+        subtotal: <%= number_to_currency(cart.subtotal(item)) %>
+        <%= button_to "delete", remove_item_path(item), method: :delete %>
+        <%= button_to "+", cart_item_path(item), method: :post %>
+        <%= button_to "-", cart_item_path(item), method: :patch %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
