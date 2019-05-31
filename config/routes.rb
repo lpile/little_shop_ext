@@ -27,6 +27,11 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show, :destroy, :create]
   end
 
+  # User locations
+  resources :users, only: [:new, :create, :show] do
+    resources :locations, only: [:new, :create]
+  end
+
   namespace :dashboard do
     get '/', to: 'dashboard#index'
 
