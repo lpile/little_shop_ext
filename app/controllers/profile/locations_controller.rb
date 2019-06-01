@@ -34,6 +34,8 @@ class Profile::LocationsController < ApplicationController
   end
 
   def destroy
+    @user = current_user
+    @user.locations.delete(Location.find(params[:id]))
     redirect_to profile_path
   end
 
