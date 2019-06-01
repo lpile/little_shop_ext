@@ -5,13 +5,14 @@ class Profile::LocationsController < ApplicationController
   end
 
   def create
-    user = current_user
-    location = user.locations.create(location_params)
-    if location.save
+    @user = current_user
+    @location = @user.locations.create(location_params)
+    if @location.save
       flash[:success] = "Shipping location successfully added!"
       redirect_to profile_path
     else
-      flash.now[:danger] = user.errors.full_messages
+      flash.now[:danger] = @location.errors.full_messages
+      @location.update(nickname: "")
       render :new
     end
   end
