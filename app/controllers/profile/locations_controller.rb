@@ -18,11 +18,19 @@ class Profile::LocationsController < ApplicationController
   end
 
   def edit
-    redirect_to profile_path
+    @location = Location.find(params[:id])
   end
 
   def update
-    redirect_to profile_path
+    @location = Location.find(params[:id])
+    @location.update(location_params)
+    if @location.save
+      flash[:success] = "Your location has been updated!"
+      redirect_to profile_path
+    else
+      flash.now[:danger] = @location.errors.full_messages
+      render :edit
+    end
   end
 
   def destroy
