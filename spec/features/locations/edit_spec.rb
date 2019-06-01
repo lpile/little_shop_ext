@@ -11,7 +11,6 @@ RSpec.describe 'Edit shipping location,', type: :feature do
     it "has a form prepopulated with the shipping location data" do
       visit edit_profile_location_path(@location)
 
-      expect(page).to have_css("[@value='#{@location.nickname}']")
       expect(page).to have_css("[@value='#{@location.address}']")
       expect(page).to have_css("[@value='#{@location.city}']")
       expect(page).to have_css("[@value='#{@location.state}']")

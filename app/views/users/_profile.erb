@@ -5,12 +5,12 @@
   <p>Email: <%= @user.email %></p>
   <p>Role: <%= @user.role %></p>
   <div id="address-details">
-    <b>Address:</b>
     <p>
-      <%= @user.address %>,
-      <%= @user.city %>,
-      <%= @user.state %>
-      <%= @user.zip %>
+    Address:
+    <%= @user.address %>,
+    <%= @user.city %>,
+    <%= @user.state %>
+    <%= @user.zip %>
     </p>
   </div>
   <p><%= link_to 'Edit Profile Data', edit_profile_path unless current_admin? %></p>
@@ -28,8 +28,8 @@
           <%= location.state %>
           <%= location.zip %>
         </p>
-        <p><%= link_to "Delete", profile_location_path(location), method: :delete %></p>
-        <p><%= link_to "Edit", edit_profile_location_path(location) %></p>
+        <p><%= link_to "Delete", profile_location_path(location), method: :delete %>
+        <%= link_to "Edit", edit_profile_location_path(location) %></p>
       </div>
     <% end %>
   <% else %>
