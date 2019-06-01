@@ -9,6 +9,7 @@ class User < ApplicationRecord
   # as a consumer
   has_many :orders
   has_many :order_items, through: :orders
+  has_many :locations
 
   # as a merchant
   has_many :items, foreign_key: 'merchant_id'

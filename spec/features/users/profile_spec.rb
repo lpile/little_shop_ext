@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe 'user profile', type: :feature do
   before :each do
     @user = create(:user)
+    @location = create(:location, user: @user)
   end
 
   describe 'registered user visits their profile' do
@@ -21,6 +22,18 @@ RSpec.describe 'user profile', type: :feature do
         expect(page).to have_link('Edit Profile Data')
       end
     end
+
+    it "there's links for shipping location crud functionality" do
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+
+      visit profile_path
+
+      within '#shipping-locations' do
+        expect(page).to have_link("Add Shipping Location", href: new_profile_location_path)
+        expect(page).to have_link("Delete", href: profile_location_path(@location))
+        expect(page).to have_link("Edit", href: edit_profile_location_path(@location))
+      end
+    end
   end
 
   describe 'registered user edits their profile' do
@@ -30,7 +43,9 @@ RSpec.describe 'user profile', type: :feature do
 
         visit profile_path
 
-        click_link 'Edit'
+        within '#profile-data' do
+          click_link 'Edit'
+        end
 
         expect(current_path).to eq('/profile/edit')
         expect(find_field('Name').value).to eq(@user.name)

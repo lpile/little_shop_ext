@@ -4,16 +4,38 @@
   <h2>Order Data</h2>
   <p>Email: <%= @user.email %></p>
   <p>Role: <%= @user.role %></p>
-  <aside id="address-details">
-    <h3>Address:</h3>
-    <p><%= @user.address %></p>
+  <div id="address-details">
+    <b>Address:</b>
     <p>
+      <%= @user.address %>,
       <%= @user.city %>,
       <%= @user.state %>
       <%= @user.zip %>
     </p>
-  </aside>
+  </div>
   <p><%= link_to 'Edit Profile Data', edit_profile_path unless current_admin? %></p>
+</section>
+
+<section id="shipping-locations">
+  <h2>Shipping Locations</h2>
+  <% if @user.locations.any? %>
+    <% @user.locations.each do |location| %>
+      <div id="location-<%= location.id %>">
+        <h5><%= location.nickname %></h5>
+        <p>
+          <%= location.address %>,
+          <%= location.city %>,
+          <%= location.state %>
+          <%= location.zip %>
+        </p>
+        <p><%= link_to "Delete", profile_location_path(location), method: :delete %></p>
+        <p><%= link_to "Edit", edit_profile_location_path(location) %></p>
+      </div>
+    <% end %>
+  <% else %>
+  You have no shipping locations yet.
+  <% end %>
+  <p><%= link_to "Add Shipping Location", new_profile_location_path %></p>
 </section>
 
 <section id="orders-data">
