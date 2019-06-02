@@ -1,7 +1,7 @@
 <%= form_for @location, url: profile_locations_path do |f| %>
 <p>
   <%= f.label :nickname %>:
-  <%= f.text_field :nickname %>
+  <%= f.text_field :nickname, value: "" %>
 </p>
 
 <p>

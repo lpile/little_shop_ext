@@ -20,9 +20,25 @@ RSpec.describe "Checking out" do
     click_on "Add to Cart"
   end
 
+  context "as a logged in regular user with no shipping addresses," do
+    it "they cannot checkout and see an error to add shipping address" do
+      @user = create(:user)
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+      
+      visit cart_path
+
+      click_button "Check Out"
+
+      expect(@user.locations.count).to eq(0)
+      expect(page).to have_content("You need to add shipping location to your profile.")
+      expect(current_path).to eq(new_profile_location_path)
+    end
+  end
+
   context "as a logged in regular user" do
     before :each do
       user = create(:user)
+      location = create(:location, user: user)
       login_as(user)
       visit cart_path
 

@@ -15,6 +15,13 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    location = Location.new(
+      address: params[:user][:address],
+      city: params[:user][:city],
+      state: params[:user][:state],
+      zip: params[:user][:zip]
+    )
+    @user.locations << location
     if @user.save
       session[:user_id] = @user.id
       flash[:success] = "Registration Successful! You are now logged in."

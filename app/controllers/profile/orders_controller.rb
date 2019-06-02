@@ -31,12 +31,17 @@ class Profile::OrdersController < ApplicationController
   end
 
   def create
-    order = Order.create(user: current_user, status: :pending)
-    cart.items.each do |item, quantity|
-      order.order_items.create(item: item, quantity: quantity, price: item.price)
+    if current_user != nil && current_user.locations.empty?
+      flash[:danger] = "You need to add shipping location to your profile."
+      redirect_to new_profile_location_path
+    else
+      order = Order.create(user: current_user, status: :pending)
+      cart.items.each do |item, quantity|
+        order.order_items.create(item: item, quantity: quantity, price: item.price)
+      end
+      session.delete(:cart)
+      flash[:success] = "Your order has been created!"
+      redirect_to profile_orders_path
     end
-    session.delete(:cart)
-    flash[:success] = "Your order has been created!"
-    redirect_to profile_orders_path
   end
 end

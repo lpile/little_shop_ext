@@ -23,6 +23,33 @@ RSpec.describe 'the registration page' do
       expect(page).to have_content("Registration Successful! You are now logged in.")
       expect(page).to have_content("Logged in as #{user.name}")
     end
+
+    it "should also create default shipping location for new user after filling out the form" do
+      visit registration_path
+
+      fill_in :user_name, with: "name"
+      fill_in :user_address, with: "address"
+      fill_in :user_city, with: "city"
+      fill_in :user_state, with: "state"
+      fill_in :user_zip, with: "zip"
+      fill_in :user_email, with: "example@gmail.com"
+      fill_in :user_password, with: "password"
+      fill_in :user_password_confirmation, with: "password"
+
+      click_button "Submit"
+
+      user = User.last
+
+      expect(current_path).to eq(profile_path)
+
+      within '#shipping-locations' do
+        expect(page).to have_content("Home")
+        expect(page).to have_content("address")
+        expect(page).to have_content("city")
+        expect(page).to have_content("state")
+        expect(page).to have_content("zip")
+      end
+    end
   end
 
   describe 'sad path' do
