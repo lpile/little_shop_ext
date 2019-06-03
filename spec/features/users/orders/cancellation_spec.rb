@@ -43,13 +43,13 @@ RSpec.describe 'User Order workflow', type: :feature do
       login_as(@user)
 
       visit profile_order_path(@order_1)
-      expect(page).to have_button('Cancel Order')
+      expect(page).to have_link('Cancel Order')
 
       visit profile_order_path(@order_2)
-      expect(page).to have_button('Cancel Order')
+      expect(page).to have_link('Cancel Order')
 
       visit profile_order_path(@order_3)
-      expect(page).to_not have_button('Cancel Order')
+      expect(page).to_not have_link('Cancel Order')
 
       @am_user = true
     end
@@ -58,7 +58,7 @@ RSpec.describe 'User Order workflow', type: :feature do
 
     after :each do
       visit profile_order_path(@order_1)
-      click_button('Cancel Order')
+      click_link('Cancel Order')
 
       expect(current_path).to eq(profile_orders_path)
 
@@ -79,7 +79,7 @@ RSpec.describe 'User Order workflow', type: :feature do
 
       # cancel order 2
       visit profile_order_path(@order_2)
-      click_button('Cancel Order')
+      click_link('Cancel Order')
 
       expect(current_path).to eq(profile_orders_path)
 
