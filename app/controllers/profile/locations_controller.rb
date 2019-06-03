@@ -6,7 +6,15 @@ class Profile::LocationsController < ApplicationController
 
   def create
     @user = current_user
-    @location = @user.locations.create(location_params)
+    @location = Location.new(location_params)
+    # Update user profile address
+    if @user.locations.empty?
+      @user.update(address: @location.address)
+      @user.update(city: @location.city)
+      @user.update(state: @location.state)
+      @user.update(zip: @location.zip)
+    end
+    @user.locations << @location
     if @location.save
       flash[:success] = "Shipping location successfully added!"
       redirect_to profile_path
@@ -42,6 +50,8 @@ class Profile::LocationsController < ApplicationController
   private
 
   def location_params
-    params.require(:location).permit(:nickname, :address, :city, :state, :zip)
+    lp = params.require(:location).permit(:nickname, :address, :city, :state, :zip)
+    lp.delete(:nickname) if lp[:nickname].empty?
+    lp
   end
 end
