@@ -47,6 +47,20 @@ class Profile::LocationsController < ApplicationController
     redirect_to profile_path
   end
 
+  def change
+    @order = Order.find(params[:id])
+    @user = current_user
+    if @order.status == 'pending'
+      @order.update(ship_location_id: params[:location_id])
+      @user.update(ship_location_id: params[:location_id])
+      session[:update] = @order.id
+      flash[:success] = "Shipping location has successfully changed."
+    else
+      flash[:danger] = "Shipping location can not be changed."
+    end
+    redirect_to profile_order_path(@order)
+  end
+
   private
 
   def location_params

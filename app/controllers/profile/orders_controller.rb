@@ -7,7 +7,15 @@ class Profile::OrdersController < ApplicationController
   end
 
   def show
-    @order = Order.find(params[:id])
+    if session[:update]
+      @order = Order.find(session[:update])
+      @address = Location.find(@order.ship_location_id)
+    else
+      @order = Order.find(params[:id])
+      if @order.ship_location_id
+        @address = Location.find(@order.ship_location_id)
+      end
+    end
   end
 
   def destroy
@@ -46,5 +54,10 @@ class Profile::OrdersController < ApplicationController
       flash[:success] = "Your order has been created!"
       redirect_to profile_orders_path
     end
+  end
+
+  def edit
+    @user = current_user
+    @order = params[:id]
   end
 end
