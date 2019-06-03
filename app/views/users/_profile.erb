@@ -30,6 +30,7 @@
         </p>
         <p><%= link_to "Delete", profile_location_path(location), method: :delete %>
         <%= link_to "Edit", edit_profile_location_path(location) %></p>
+        <p><%= link_to "Select As Shipping Location", set_ship_location_id_path(location), method: :patch %></p>
       </div>
     <% end %>
   <% else %>

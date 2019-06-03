@@ -22,10 +22,10 @@ RSpec.describe 'Add shipping location,', type: :feature do
     visit new_profile_location_path
 
     fill_in :location_nickname, with: "New Home"
-    fill_in :location_address, with: "Address 1"
-    fill_in :location_city, with: "City 1"
-    fill_in :location_state, with: "State 1"
-    fill_in :location_zip, with: "Zip 1"
+    fill_in :location_address, with: "New Address"
+    fill_in :location_city, with: "New City"
+    fill_in :location_state, with: "New State"
+    fill_in :location_zip, with: "New Zip"
 
     click_button "Submit"
 
@@ -33,10 +33,10 @@ RSpec.describe 'Add shipping location,', type: :feature do
 
     within '#shipping-locations' do
       expect(page).to have_content("New Home")
-      expect(page).to have_content("Address 1")
-      expect(page).to have_content("City 1")
-      expect(page).to have_content("State 1")
-      expect(page).to have_content("Zip 1")
+      expect(page).to have_content("New Address")
+      expect(page).to have_content("New City")
+      expect(page).to have_content("New State")
+      expect(page).to have_content("New Zip")
     end
   end
 
@@ -67,12 +67,56 @@ RSpec.describe 'Add shipping location,', type: :feature do
 
       expect(current_path).to eq(profile_locations_path)
       expect(page).to have_content("Nickname has already been taken")
-
       expect(page).to have_css("input[value='Address 1']")
       expect(page).to have_css("input[value='City 1']")
       expect(page).to have_css("input[value='State 1']")
       expect(page).to have_css("input[value='Zip 1']")
       expect(page).to_not have_css("input[value='Nickname 1']")
+    end
+
+    it "should default nickname 'Home' for first shipping locaton entry" do
+      Location.destroy_all
+
+      visit new_profile_location_path
+
+      fill_in :location_address, with: "New Address"
+      fill_in :location_city, with: "New City"
+      fill_in :location_state, with: "New State"
+      fill_in :location_zip, with: "New Zip"
+
+      click_button "Submit"
+
+      expect(current_path).to eq(profile_path)
+
+      within '#shipping-locations' do
+        expect(page).to have_content("Home")
+        expect(page).to have_content("New Address")
+        expect(page).to have_content("New City")
+        expect(page).to have_content("New State")
+        expect(page).to have_content("New Zip")
+      end
+    end
+
+    it "should update user address profile when adding first shipping location" do
+      Location.destroy_all
+
+      visit new_profile_location_path
+
+      fill_in :location_address, with: "New Address"
+      fill_in :location_city, with: "New City"
+      fill_in :location_state, with: "New State"
+      fill_in :location_zip, with: "New Zip"
+
+      click_button "Submit"
+
+      expect(current_path).to eq(profile_path)
+
+      within '#address-details' do
+        expect(page).to have_content("New Address")
+        expect(page).to have_content("New City")
+        expect(page).to have_content("New State")
+        expect(page).to have_content("New Zip")
+      end
     end
   end
 end

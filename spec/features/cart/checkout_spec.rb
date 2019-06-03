@@ -22,16 +22,47 @@ RSpec.describe "Checking out" do
 
   context "as a logged in regular user with no shipping addresses," do
     it "they cannot checkout and see an error to add shipping address" do
-      @user = create(:user)
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
-      
+      user = create(:user)
+      login_as(user)
       visit cart_path
 
       click_button "Check Out"
 
-      expect(@user.locations.count).to eq(0)
+      expect(user.locations.count).to eq(0)
       expect(page).to have_content("You need to add shipping location to your profile.")
       expect(current_path).to eq(new_profile_location_path)
+    end
+  end
+
+  context "as a logged in regular user," do
+    it "they cannot checkout until select shipping address" do
+      user = create(:user)
+      location = create(:location, user: user)
+      login_as(user)
+      visit cart_path
+
+      click_button "Check Out"
+
+      expect(user.ship_location_id).to eq(nil)
+      expect(page).to have_content("Please select shipping location for your order.")
+      expect(current_path).to eq(profile_path)
+      expect(page).to have_link("Select As Shipping Location", href: set_ship_location_id_path(location))
+
+      within("#location-#{location.id}") do
+        click_on "Select As Shipping Location"
+      end
+      expect(current_path).to eq(cart_path)
+
+      click_button "Check Out"
+      
+      @new_order = Order.last
+      expect(current_path).to eq(profile_orders_path)
+      expect(page).to have_content("Your order has been created!")
+      expect(page).to have_content("Cart: 0")
+      within("#order-#{@new_order.id}") do
+        expect(page).to have_link("Order ID #{@new_order.id}")
+        expect(page).to have_content("Status: pending")
+      end
     end
   end
 
@@ -39,6 +70,7 @@ RSpec.describe "Checking out" do
     before :each do
       user = create(:user)
       location = create(:location, user: user)
+      user.update(ship_location_id: location.id)
       login_as(user)
       visit cart_path
 
