@@ -45,6 +45,13 @@ class UsersController < ApplicationController
     end
   end
 
+  def set_ship_address
+    @user = current_user
+    @user.update(ship_location_id: params[:id])
+    session[:ship_location_id] = params[:id]
+    redirect_to cart_path
+  end
+
   private
 
   def user_params

@@ -34,8 +34,11 @@ class Profile::OrdersController < ApplicationController
     if current_user != nil && current_user.locations.empty?
       flash[:danger] = "You need to add shipping location to your profile."
       redirect_to new_profile_location_path
+    elsif current_user != nil && current_user.ship_location_id.nil?
+      flash[:danger] = "Please select shipping location for your order."
+      redirect_to profile_path
     else
-      order = Order.create(user: current_user, status: :pending)
+      order = Order.create(user: current_user, status: :pending, ship_location_id: session[:ship_location_id])
       cart.items.each do |item, quantity|
         order.order_items.create(item: item, quantity: quantity, price: item.price)
       end
