@@ -25,12 +25,12 @@ RSpec.describe 'User change shipping location', type: :feature do
     @order_3 = create(:shipped_order, user: @user, created_at: 1.day.ago, ship_location_id: @location_1.id)
     @oi_1 = create(:fulfilled_order_item, order: @order_3, item: @item_1, price: 1, quantity: 1, created_at: 1.day.ago, updated_at: 5.hours.ago)
     @oi_2 = create(:fulfilled_order_item, order: @order_3, item: @item_2, price: 2, quantity: 1, created_at: 1.day.ago, updated_at: 2.hours.ago)
+
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
   end
 
   describe 'as a user trying to change orders shipping address' do
-    it 'should be successful if status is pending' do
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
-
+    it 'should be successful if order status is pending' do
       visit profile_order_path(@order_1)
       expect(@order_1.ship_location_id).to eq(@location_1.id)
       expect(page).to have_link('Change Shipping Location')
@@ -48,15 +48,13 @@ RSpec.describe 'User change shipping location', type: :feature do
       expect(page).to_not have_content(@location_1.nickname)
     end
 
-    it 'should not be successful if status is packaged' do
-      login_as(@user)
+    it 'should not be successful if order status is packaged' do
       visit profile_order_path(@order_2)
       expect(@order_2.ship_location_id).to eq(@location_1.id)
       expect(page).to_not have_link('Change Shipping Location')
     end
 
-    it 'should not be successful if status is shipped' do
-      login_as(@user)
+    it 'should not be successful if order status is shipped' do
       visit profile_order_path(@order_3)
       expect(@order_3.ship_location_id).to eq(@location_1.id)
       expect(page).to_not have_link('Change Shipping Location')

@@ -26,7 +26,12 @@ class Profile::LocationsController < ApplicationController
   end
 
   def edit
+    @user = current_user
     @location = Location.find(params[:id])
+    unless @user.check_pending_orders?(@location)
+      flash[:danger] = "Your location cannot to be edited for completed order!"
+      redirect_to profile_path
+    end
   end
 
   def update
@@ -43,7 +48,13 @@ class Profile::LocationsController < ApplicationController
 
   def destroy
     @user = current_user
-    @user.locations.delete(Location.find(params[:id]))
+    @location = Location.find(params[:id])
+    if @user.check_pending_orders?(@location)
+      @user.locations.delete(@location)
+      flash[:success] = "Your location has been deleted!"
+    else
+      flash[:danger] = "Your location cannot to be deleted for completed order!"
+    end
     redirect_to profile_path
   end
 
@@ -55,8 +66,6 @@ class Profile::LocationsController < ApplicationController
       @user.update(ship_location_id: params[:location_id])
       session[:update] = @order.id
       flash[:success] = "Shipping location has successfully changed."
-    else
-      flash[:danger] = "Shipping location can not be changed."
     end
     redirect_to profile_order_path(@order)
   end

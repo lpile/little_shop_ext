@@ -14,6 +14,12 @@ class User < ApplicationRecord
   # as a merchant
   has_many :items, foreign_key: 'merchant_id'
 
+  def check_pending_orders?(input_location)
+    orders.where(orders: {status: :pending})
+          .where(orders: {ship_location_id: input_location.id})
+          .length > 0
+  end
+
   def active_items
     items.where(active: true).order(:name)
   end
