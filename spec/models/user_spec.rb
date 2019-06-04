@@ -21,6 +21,28 @@ RSpec.describe User, type: :model do
     it { should have_many :items }
   end
 
+  describe 'instance methods' do
+    before :each do
+      @user = create(:user)
+      @location_1 = create(:location, user: @user)
+      @location_2 = create(:location, user: @user)
+      @user.update(ship_location_id: @location_1.id)
+      @merchant = create(:merchant)
+      @item_1 = create(:item, user: @merchant, inventory: 2)
+      @item_2 = create(:item, user: @merchant, inventory: 3)
+      @order_1 = create(:order, user: @user, created_at: 1.day.ago, ship_location_id: @location_1.id)
+      @oi_1 = create(:order_item, order: @order_1, item: @item_1, price: 1, quantity: 1, created_at: 1.day.ago)
+      @order_2 = create(:packaged_order, user: @user, created_at: 1.day.ago, ship_location_id: @location_2.id)
+      @oi_1 = create(:order_item, order: @order_2, item: @item_1, price: 1, quantity: 1, created_at: 1.day.ago)
+      @oi_2 = create(:fulfilled_order_item, order: @order_2, item: @item_2, price: 2, quantity: 3, created_at: 1.day.ago, updated_at: 2.hours.ago)
+    end
+
+    it ".check_pending_orders?(input_location)" do
+      expect(@user.check_pending_orders?(@location_1)).to eq(true)
+      expect(@user.check_pending_orders?(@location_2)).to eq(false)
+    end
+  end
+
   describe 'roles' do
     it 'can be created as a default user' do
       user = User.create(
