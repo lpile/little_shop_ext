@@ -24,8 +24,9 @@ Rails.application.routes.draw do
   get '/profile/edit', to: 'users#edit', as: :edit_profile
   patch '/profile/edit', to: 'users#update'
   patch '/profile/location/:id', to: 'users#set_ship_address', as: :set_ship_location_id
+  patch '/profile/orders/:id/location/:id', to: 'profile/locations#change', as: :change
   namespace :profile do
-    resources :orders, only: [:index, :show, :destroy, :create]
+    resources :orders, only: [:index, :show, :destroy, :create, :edit, :update]
     # User locations
     resources :locations, except: [:index, :show]
   end

@@ -1,0 +1,20 @@
+<section id="shipping-locations">
+  <h2>Pick A New Shipping Location</h2>
+  <% if @user.locations.any? %>
+    <% @user.locations.each do |location| %>
+      <div id="location-<%= location.id %>">
+        <h5><%= location.nickname %></h5>
+        <p>
+          <%= location.address %>,
+          <%= location.city %>,
+          <%= location.state %>
+          <%= location.zip %>
+        </p>
+        <p><%= link_to "Select As New Shipping Location", change_path(@order, location_id: location.id), method: :patch %></p>
+      </div>
+    <% end %>
+  <% else %>
+  You have no shipping locations yet.
+  <% end %>
+  <p><%= link_to "Add Shipping Location", new_profile_location_path %></p>
+</section>
